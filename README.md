@@ -1,5 +1,9 @@
 # control systems: PID, LQR, and MPC
 
+Both drones follow a path shaped like a sideways number eight: **∞**. This is
+often called a *figure-eight trajectory*. It is simply two connected loops—the
+drone flies the right loop, crosses the center, flies the left loop, and returns
+to the center.
 
 ## Run
 
@@ -48,10 +52,10 @@ $$F=m\left(u+[0,0,9.81]^T\right).$$
 The complete feedback loop is:
 
 ```text
-figure-eight reference -> controller -> desired acceleration
-          ^                                |
-          |                                v
- measured position/velocity <- MuJoCo <- F = m(a + g)
+sideways-8 reference -> controller -> desired acceleration
+         ^                                 |
+         |                                 v
+measured position/velocity <- MuJoCo <- F = m(a + g)
 ```
 
 Thus, PID, LQR, and MPC produce the same kind of command. They differ only in
@@ -72,11 +76,21 @@ Dimensions and inertia are not part of this simplified controller model because
 rotation is disabled. A full quadrotor controller would need attitude, inertia,
 motor thrust, and torque.
 
-## Reference trajectory
+## Reference path: a sideways eight (∞)
 
-Takeoff lasts 1.5 s, the figure-eight lasts 7 s, landing lasts 1.5 s, and the
-drone pauses for 1 s. Smoothstep $s(\tau)=3\tau^2-2\tau^3$ prevents an abrupt
-start. During the figure-eight, $\theta=2\pi s(\tau)$ and
+Viewed from above, the movement is:
+
+```text
+center -> right loop -> center -> left loop -> center
+```
+
+This path is useful for learning because the controller must change x and y
+together, reverse direction at the center, and handle curved motion. A small
+height change makes it a 3D path rather than a flat one.
+
+Takeoff lasts 1.5 s, the sideways-8 path lasts 7 s, landing lasts 1.5 s, and
+the drone pauses for 1 s. Smoothstep $s(\tau)=3\tau^2-2\tau^3$ prevents an
+abrupt start and stop. During the two loops, $\theta=2\pi s(\tau)$ and
 
 $$p_r(\theta)=
 \begin{bmatrix}
@@ -84,6 +98,10 @@ r\sin\theta\\
 \frac{r}{2}\sin(2\theta)\\
 h\left(1+0.18\sin(2\theta)\right)
 \end{bmatrix}.$$
+
+Here, $r$ controls the horizontal size and $h$ is the normal flight height.
+The $\sin(\theta)$ and $\sin(2\theta)$ terms create the two connected loops;
+the final term adds a small altitude change.
 
 ## PID
 
@@ -154,7 +172,8 @@ $$u=-Ke.$$
 
 Here $x=[p_x,p_y,p_z,v_x,v_y,v_z]^T$ and
 
-$$Q=\operatorname{diag}(35,35,45,3,3,4),\qquad R=0.25I_3.$$
+The diagonal entries of $Q$ are $[35,35,45,3,3,4]$ (all other entries are
+zero), and $R=0.25I_3$.
 
 The gain used by the code is
 
