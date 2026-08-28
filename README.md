@@ -60,8 +60,19 @@ where:
 
 or $x_{k+1}=Ax_k+Bu_k$, with
 
-$$A=\begin{bmatrix}I_3&\Delta t I_3\\0&I_3\end{bmatrix},\qquad
-B=\begin{bmatrix}\frac{1}{2}\Delta t^2 I_3\\\Delta t I_3\end{bmatrix}.$$
+$$
+A=
+\begin{bmatrix}
+I_3 & \Delta t\,I_3 \\
+0 & I_3
+\end{bmatrix},
+\qquad
+B=
+\begin{bmatrix}
+\frac{1}{2}\Delta t^2 I_3 \\
+\Delta t\,I_3
+\end{bmatrix}.
+$$
 
 where:
 
