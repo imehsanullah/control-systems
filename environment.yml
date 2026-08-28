@@ -1,0 +1,10 @@
+name: mujoco-drones
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - mujoco>=3.3,<4
+      - scipy>=1.14,<2
+      - imageio>=2.37,<3

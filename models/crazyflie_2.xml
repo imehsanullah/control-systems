@@ -1,0 +1,53 @@
+<mujoco model="Bitcraze Crazyflie 2 - minimal">
+  <compiler angle="degree"/>
+  <option timestep="0.01" gravity="0 0 -9.81" integrator="implicitfast"/>
+
+  <visual>
+    <headlight ambient="0.35 0.35 0.35" diffuse="0.8 0.8 0.8" specular="0.2 0.2 0.2"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="135" elevation="-20"/>
+  </visual>
+
+  <asset>
+    <texture name="grid" type="2d" builtin="checker" width="512" height="512"
+             rgb1="0.12 0.22 0.32" rgb2="0.20 0.38 0.55"/>
+    <material name="ground" texture="grid" texrepeat="24 24" reflectance="0.15"/>
+    <material name="board" rgba="0.08 0.28 0.16 1"/>
+    <material name="white" rgba="0.78 0.80 0.82 1"/>
+    <material name="rotor" rgba="0.88 0.90 0.93 0.72"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0 -1 2" dir="0 0 -1"/>
+    <geom name="floor" type="plane" size="2 2 0.1" material="ground"/>
+    <body name="crazyflie_2" pos="0 0 0.019">
+      <joint name="x" type="slide" axis="1 0 0" range="-0.9 0.9"/>
+      <joint name="y" type="slide" axis="0 1 0" range="-0.5 0.5"/>
+      <joint name="z" type="slide" axis="0 0 1" range="0 1.05"/>
+
+      <geom name="board" type="box" pos="0 0 0.007" size="0.0175 0.0125 0.0035" material="board" mass="0.012"/>
+      <geom name="battery" type="box" pos="0 0 0" size="0.013 0.009 0.0035" rgba="0.18 0.18 0.18 1" mass="0.008"/>
+
+      <geom type="capsule" fromto="0.01 0.0075 0.004  0.0325 0.0325 0.004" size="0.003" material="white" mass="0.001"/>
+      <geom type="capsule" fromto="0.01 -0.0075 0.004  0.0325 -0.0325 0.004" size="0.003" material="white" mass="0.001"/>
+      <geom type="capsule" fromto="-0.01 0.0075 0.004  -0.0325 0.0325 0.004" size="0.003" material="white" mass="0.001"/>
+      <geom type="capsule" fromto="-0.01 -0.0075 0.004  -0.0325 -0.0325 0.004" size="0.003" material="white" mass="0.001"/>
+
+      <geom type="cylinder" pos="0.0325 0.0325 0.008" size="0.025 0.001" material="rotor" mass="0.0005"/>
+      <geom type="cylinder" pos="0.0325 -0.0325 0.008" size="0.025 0.001" material="rotor" mass="0.0005"/>
+      <geom type="cylinder" pos="-0.0325 0.0325 0.008" size="0.025 0.001" material="rotor" mass="0.0005"/>
+      <geom type="cylinder" pos="-0.0325 -0.0325 0.008" size="0.025 0.001" material="rotor" mass="0.0005"/>
+
+      <geom type="capsule" fromto="0.0225 0.0175 0.002  0.0225 0.0175 -0.017" size="0.002" material="white" mass="0.0005"/>
+      <geom type="capsule" fromto="0.0225 -0.0175 0.002  0.0225 -0.0175 -0.017" size="0.002" material="white" mass="0.0005"/>
+      <geom type="capsule" fromto="-0.0225 0.0175 0.002  -0.0225 0.0175 -0.017" size="0.002" material="white" mass="0.0005"/>
+      <geom type="capsule" fromto="-0.0225 -0.0175 0.002  -0.0225 -0.0175 -0.017" size="0.002" material="white" mass="0.0005"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor name="force_x" joint="x" ctrllimited="true" ctrlrange="-10 10"/>
+    <motor name="force_y" joint="y" ctrllimited="true" ctrlrange="-10 10"/>
+    <motor name="force_z" joint="z" ctrllimited="true" ctrlrange="-10 10"/>
+  </actuator>
+</mujoco>
